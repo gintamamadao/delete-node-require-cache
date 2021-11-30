@@ -66,6 +66,8 @@ export const delCache = async (rootFile: string) => {
   const allDepJS = getAllDependJS(rootFile)
   for (const itJS of allDepJS) {
     if (fsUtil.exist(`${itJS}.js`)) {
+      console.log(itJS, `del ${itJS} cache`)
+
       delete require.cache[require.resolve(itJS)]
     }
   }
