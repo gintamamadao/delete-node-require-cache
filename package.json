@@ -1,6 +1,6 @@
 {
   "name": "delete-node-require-cache",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -11,7 +11,7 @@
     "test": "jest",
     "test:cov": "jest --coverage --noStackTrace",
     "dev": "rollup -c rollup.config.js -w",
-    "build": "rollup -c rollup.config.js",
+    "build": "rimraf lib; rollup -c rollup.config.js",
     "commit": "git-cz",
     "del:lib": "rm -rf lib"
   },
