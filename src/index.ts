@@ -45,7 +45,7 @@ export const delRequireCache = async (rootFile: string) => {
                     }
                     Array.prototype.push.apply(
                       result,
-                      getAllDependJS(itFile) || []
+                      getAllDependJS(`${itFile}.js`) || []
                     )
                   },
                 },
