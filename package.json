@@ -1,6 +1,6 @@
 {
   "name": "delete-node-require-cache",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -18,9 +18,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gintamamadao/delete-node-require-cache.git"
-  },
-  "bin": {
-    "md-note": "./bin/cli.js"
   },
   "author": "",
   "license": "MIT",
