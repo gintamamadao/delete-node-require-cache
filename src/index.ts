@@ -49,9 +49,9 @@ export const delRequireCache = async (rootFile: string) => {
                     )
                   },
                 },
-                path.scope,
-                path.state,
-                path.parentPath
+                cPath.scope,
+                cPath.state,
+                cPath.parentPath
               )
             },
           },
