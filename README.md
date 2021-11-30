@@ -7,7 +7,7 @@
 > nodejs 加载 js 脚本会有缓存，这是基于性能考虑，但有时候我们需要 nodejs 能实时加载 js 脚本新的修改，这个包会把 js 脚本解析成 ast 语法树，分析里面的依赖的 js 脚本并且删除相关缓存
 
 ```js
-import { delRequireCache } from './index'
+import { delRequireCache } from 'delete-node-require-cache'
 
 delRequireCache(jsFilePath)
 ```

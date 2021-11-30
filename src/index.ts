@@ -4,7 +4,7 @@ import validateNpm from 'validate-npm-package-name'
 import parser from '@babel/parser'
 import traverse from '@babel/traverse'
 
-export const delCache = async (rootFile: string) => {
+export const delRequireCache = async (rootFile: string) => {
   const getAllDependJS = (filePath: string) => {
     const jsCont = fsUtil.read(filePath)
     const result = [
