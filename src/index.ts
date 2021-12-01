@@ -7,7 +7,7 @@ import traverse from '@babel/traverse'
 export const delRequireCache = async (rootFile: string) => {
   const getAllDependJS = (filePath: string) => {
     const ext = extname(filePath)
-    const jsFile = ext === '.js' || ext === '.jsx' ? filePath : `${filePath}.js`
+    const jsFile = ext === '.js' ? filePath : `${filePath}.js`
     const jsCont = fsUtil.read(jsFile)
     const result = [jsFile.slice(0, jsFile.length - extname(jsFile).length)]
     const jsAst = parser.parse(jsCont, {
