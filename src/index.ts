@@ -64,11 +64,12 @@ export const delRequireCache = async (rootFile: string) => {
     return result
   }
   const allDepJS = getAllDependJS(rootFile)
+  const delJSFiles: string[] = []
   for (const itJS of allDepJS) {
     if (fsUtil.exist(`${itJS}.js`)) {
-      // console.log(itJS, `del ${itJS} cache`)
-
       delete require.cache[require.resolve(itJS)]
+      delJSFiles.push(itJS)
     }
   }
+  return delJSFiles
 }
