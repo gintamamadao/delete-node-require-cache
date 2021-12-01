@@ -6,10 +6,10 @@ import traverse from '@babel/traverse'
 
 export const delRequireCache = async (rootFile: string) => {
   const getAllDependJS = (filePath: string) => {
-    const jsCont = fsUtil.read(filePath)
-    const result = [
-      filePath.slice(0, filePath.length - extname(filePath).length),
-    ]
+    const ext = extname(filePath)
+    const jsFile = ext === '.js' ? filePath : `${filePath}.js`
+    const jsCont = fsUtil.read(jsFile)
+    const result = [jsFile.slice(0, jsFile.length - extname(jsFile).length)]
     const jsAst = parser.parse(jsCont, {
       sourceType: 'module',
       plugins: ['typescript', 'jsx'],
@@ -17,7 +17,7 @@ export const delRequireCache = async (rootFile: string) => {
     traverse(jsAst, {
       ImportDeclaration(path) {
         const sourceVal = path?.node?.source?.value
-        const itFile = resolve(dirname(filePath), sourceVal)
+        const itFile = resolve(dirname(jsFile), sourceVal)
         if (validateNpm(sourceVal)?.validForNewPackages || !sourceVal) {
           return
         }
@@ -37,7 +37,7 @@ export const delRequireCache = async (rootFile: string) => {
                 {
                   StringLiteral(csPath: any) {
                     const csValue = csPath?.node?.value
-                    const itFile = resolve(dirname(filePath), csValue)
+                    const itFile = resolve(dirname(jsFile), csValue)
                     if (csValue) {
                     }
                     if (validateNpm(csValue)?.validForNewPackages || !csValue) {
