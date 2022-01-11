@@ -1,7 +1,7 @@
 {
   "name": "delete-node-require-cache",
   "version": "1.2.0",
-  "description": "delete node require cache",
+  "description": "delete NodeJS require cache",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "files": [
