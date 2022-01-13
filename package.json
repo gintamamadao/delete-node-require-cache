@@ -1,6 +1,6 @@
 {
   "name": "delete-node-require-cache",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "delete NodeJS require cache",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -19,7 +19,14 @@
     "type": "git",
     "url": "git+https://github.com/gintamamadao/delete-node-require-cache.git"
   },
-  "author": "",
+  "keywords": [
+    "node",
+    "require",
+    "cache",
+    "delete",
+    "clear"
+  ],
+  "author": "gintamamadao",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/gintamamadao/delete-node-require-cache/issues"
@@ -73,6 +80,5 @@
     "ts-node": "^9.1.1",
     "tslib": "^2.0.0",
     "typescript": "^4.0.2"
-  },
-  "gitHead": "41695ee7cd51d3c2658fc8bbee01129417cf24f9"
+  }
 }
