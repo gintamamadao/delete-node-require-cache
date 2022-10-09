@@ -12,13 +12,12 @@ const babelOpt = {
   babelHelpers: 'runtime',
   exclude: 'node_modules/**',
   include: ['src/**/*'],
-  plugins: ['@babel/plugin-transform-runtime'],
   presets: [
     [
       '@babel/preset-env',
       {
         targets: {
-          node: '10',
+          node: '10.0',
         },
       },
     ],
