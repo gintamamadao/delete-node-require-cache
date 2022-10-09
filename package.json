@@ -34,11 +34,11 @@
   "homepage": "https://github.com/gintamamadao/delete-node-require-cache/#readme",
   "dependencies": {
     "@babel/parser": "^7.16.4",
+    "@types/fs-extra": "^9.0.13",
     "@babel/traverse": "^7.16.3",
-    "ginlibs-cache": "^0.0.6",
-    "ginlibs-file-util": "^0.0.5",
-    "ginlibs-type-check": "^2.0.0",
-    "ginlibs-utils": "^1.0.0",
+    "lodash": "^4.17.21",
+    "crequire": "^1.8.1",
+    "fs-extra": "^10.1.0",
     "validate-npm-package-name": "^3.0.0"
   },
   "devDependencies": {

@@ -1,74 +1,74 @@
 import { resolve, dirname, extname } from 'path'
-import fsUtil from 'ginlibs-file-util'
 import validateNpm from 'validate-npm-package-name'
-import parser from '@babel/parser'
-import traverse from '@babel/traverse'
+import { existsSync, readFileSync } from 'fs-extra'
+import crequire from 'crequire'
+
+export const JSFileContentCacheMap: Record<string, any> = {}
+
+const getJSFullPath = (filePath: string) => {
+  const ext = extname(filePath)
+  const jsFile = ext === '.js' ? filePath : `${filePath}.js`
+  return jsFile
+}
+
+const getJSDepPath = (filePath: string) => {
+  const ext = extname(filePath)
+  return ext === '.js'
+    ? filePath.slice(0, filePath.length - ext.length)
+    : filePath
+}
 
 export const delRequireCache = (rootFile: string) => {
   const getAllDependJS = (filePath: string) => {
-    const ext = extname(filePath)
-    const jsFile = ext === '.js' ? filePath : `${filePath}.js`
-    const jsCont = fsUtil.read(jsFile)
-    const result = [jsFile.slice(0, jsFile.length - extname(jsFile).length)]
-    const jsAst = parser.parse(jsCont, {
-      sourceType: 'module',
-      plugins: ['typescript', 'jsx'],
+    const jsFile = getJSFullPath(filePath)
+    const jsCont = readFileSync(jsFile) + ''
+    const result = [jsFile]
+
+    const cacheInfo = JSFileContentCacheMap[jsFile] || {}
+
+    if (cacheInfo.content === jsCont && Array.isArray(cacheInfo.depends)) {
+      cacheInfo.depends.forEach((depIt) => {
+        Array.prototype.push.apply(result, getAllDependJS(depIt) || [])
+      })
+      return result
+    }
+
+    const depends = crequire(jsCont)
+    const dependFilePaths: string[] = []
+
+    depends.forEach((it) => {
+      const { path } = it
+      if (validateNpm(path)?.validForNewPackages || !path) {
+        return
+      }
+      const itFile = getJSFullPath(resolve(dirname(jsFile), path))
+      dependFilePaths.push(itFile)
+      if (result.includes(itFile)) {
+        return
+      }
+      Array.prototype.push.apply(result, getAllDependJS(itFile) || [])
     })
-    traverse(jsAst, {
-      ImportDeclaration(path) {
-        const sourceVal = path?.node?.source?.value
-        const itFile = resolve(dirname(jsFile), sourceVal)
-        if (validateNpm(sourceVal)?.validForNewPackages || !sourceVal) {
-          return
-        }
-        Array.prototype.push.apply(result, getAllDependJS(itFile) || [])
-      },
-      VariableDeclarator(path: any) {
-        traverse(
-          path.node,
-          {
-            CallExpression(cPath: any) {
-              const name = cPath?.node?.callee?.name
-              if (name !== 'require') {
-                return
-              }
-              traverse(
-                cPath.node,
-                {
-                  StringLiteral(csPath: any) {
-                    const csValue = csPath?.node?.value
-                    const itFile = resolve(dirname(jsFile), csValue)
-                    if (csValue) {
-                    }
-                    if (validateNpm(csValue)?.validForNewPackages || !csValue) {
-                      return
-                    }
-                    Array.prototype.push.apply(
-                      result,
-                      getAllDependJS(`${itFile}.js`) || []
-                    )
-                  },
-                },
-                cPath.scope,
-                cPath.state,
-                cPath.parentPath
-              )
-            },
-          },
-          path.scope,
-          path.state,
-          path.parentPath
-        )
-      },
-    })
+
+    const fileInfo = {
+      content: jsCont,
+      depends: dependFilePaths,
+      deepDepends: result,
+      needUpdate: true,
+    }
+
+    JSFileContentCacheMap[jsFile] = fileInfo
     return result
   }
   const allDepJS = getAllDependJS(rootFile)
+
   const delJSFiles: string[] = []
   for (const itJS of allDepJS) {
-    if (fsUtil.exist(`${itJS}.js`)) {
-      delete require.cache[require.resolve(itJS)]
-      delJSFiles.push(itJS)
+    const itJSCacheInfo = JSFileContentCacheMap[itJS] || {}
+    if (existsSync(itJS) && itJSCacheInfo.needUpdate) {
+      itJSCacheInfo.needUpdate = false
+      const itJSDepPath = getJSDepPath(itJS)
+      delete require.cache[require.resolve(itJSDepPath)]
+      delJSFiles.push(itJSDepPath)
     }
   }
   return delJSFiles
