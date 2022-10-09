@@ -20,6 +20,9 @@ const getJSDepPath = (filePath: string) => {
 
 export const delRequireCache = (rootFile: string) => {
   const getAllDependJS = (filePath: string) => {
+    if (!existsSync(filePath)) {
+      return []
+    }
     const jsFile = getJSFullPath(filePath)
     const jsCont = readFileSync(jsFile) + ''
     const result = [jsFile]
@@ -53,7 +56,6 @@ export const delRequireCache = (rootFile: string) => {
       content: jsCont,
       depends: dependFilePaths,
       deepDepends: result,
-      needUpdate: true,
     }
 
     JSFileContentCacheMap[jsFile] = fileInfo
@@ -63,13 +65,9 @@ export const delRequireCache = (rootFile: string) => {
 
   const delJSFiles: string[] = []
   for (const itJS of allDepJS) {
-    const itJSCacheInfo = JSFileContentCacheMap[itJS] || {}
-    if (existsSync(itJS) && itJSCacheInfo.needUpdate) {
-      itJSCacheInfo.needUpdate = false
-      const itJSDepPath = getJSDepPath(itJS)
-      delete require.cache[require.resolve(itJSDepPath)]
-      delJSFiles.push(itJSDepPath)
-    }
+    const itJSDepPath = getJSDepPath(itJS)
+    delete require.cache[require.resolve(itJSDepPath)]
+    delJSFiles.push(itJSDepPath)
   }
   return delJSFiles
 }
