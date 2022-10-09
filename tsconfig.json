@@ -11,6 +11,7 @@
     "noImplicitThis": false,
     "lib": ["es5", "es6", "dom", "es7", "esnext"],
     "experimentalDecorators": true,
-    "strict": true
+    "strict": true,
+    "types": ["node"]
   }
 }
