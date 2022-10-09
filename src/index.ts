@@ -40,7 +40,7 @@ export const delRequireCache = (rootFile: string) => {
     const dependFilePaths: string[] = []
 
     depends.forEach((it) => {
-      const { path } = it
+      const { path } = it || {}
       if (validateNpm(path)?.validForNewPackages || !path) {
         return
       }
